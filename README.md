@@ -31,3 +31,19 @@ One week after the initial compromise, ransom notes are discovered across every 
 - **Check `DeviceNetworkEvents`** for any signs of outgoing connections over known TOR ports.
 The MDE LAW logs are your only source of truth. DeviceProcessEvents
 ---
+
+## 🔎 Flag Analysis & Findings
+
+### 🐧 PHASE 1: LINUX BACKUP SERVER COMPROMISE (FLAGS 1-12)
+🚩 FLAG 1: LATERAL MOVEMENT - Remote Access
+Attackers pivot to critical infrastructure to eliminate recovery options before deploying ransomware.
+
+- **Discovery:** 
+Workstations are common initial access and pivot points in ransomware campaigns. To identify which Azuki system was most likely compromised, process activity frequency was analyzed across Azuki devices.
+RATIONALE 
+The incident brief specifies that four Azuki systems are in scope and provides a starting point to identify relevant devices. The first step was to enumerate all devices associated with the Azuki environment.
+
+https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/78310a67f868bfe637a5a58329851cbf54000a86/Picture1.png
+
+
+- **Answer:** `BitSentinelCore.exe`
