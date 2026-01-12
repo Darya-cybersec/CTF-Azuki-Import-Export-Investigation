@@ -86,3 +86,15 @@ File system enumeration reveals backup locations and valuable targets for destru
 **Answer:FLAG 4 🚩: ls --color=auto -la /backups/**
 
 **MITRE ATT&CK Mapping:** T1083: File and Directory Discovery
+
+**🚩 FLAG 5:** DISCOVERY - File Search
+Attackers search for specific file types to identify high-value targets.
+
+**Discovery:** The investigation progressed to determining whether the attacker searched for specific backup files. Since backups are commonly stored as compressed archive files, the next logical step was to look for file search activity targeting archive formats.
+Process execution telemetry on the backup server was analyzed for file search commands, focusing on utilities capable of locating files by name. Among the observed commands, the find utility was identified as the tool used to search the filesystem. The command that specifically searched within the backup directory and targeted archive file extensions was selected, as it directly demonstrated intent to locate backup archives rather than perform system maintenance or unrelated checks.
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/43c61881a567294d6cd428b4181120bf7c3196b8/Picture6.png)
+
+**Answer:FLAG 5 🚩: find /backups -name *.tar.gz**
+
+**MITRE ATT&CK Mapping:** T1083: File and Directory Discovery
