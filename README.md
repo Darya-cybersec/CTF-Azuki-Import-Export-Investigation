@@ -52,7 +52,8 @@ To reach Linux-based backup infrastructure from a Windows workstation, attackers
 ![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/01c0ad697d1cd5adcc7b95f8147d18fa5b60ea96/Picture2SSH.png)
 
 **Answer:FLAG 1 🚩: ssh.exe" backup-admin@10.1.0.189**
-**MITRE:** T1021.004 – Remote Services (SSH)
+
+**MITRE ATT&CK Mapping:** T1021.004 – Remote Services (SSH)
 
 **🚩 FLAG 2:** LATERAL MOVEMENT - Attack Source
 
@@ -61,4 +62,5 @@ To reach Linux-based backup infrastructure from a Windows workstation, attackers
 ![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/ea11306f91dc04627c43c2bd8698ec86c4000599/Picture3.png)
 
 **Answer:FLAG 2 🚩: 10.1.0.108**
-**MITRE:** T1078.002: Valid Accounts - Domain Accounts
+
+**MITRE ATT&CK Mapping:** T1078.002: Valid Accounts - Domain Accounts
