@@ -6,11 +6,10 @@ Attackers pivot to critical infrastructure to eliminate recovery options before 
 
 - **Discovery:** 
 Workstations are common initial access and pivot points in ransomware campaigns. To identify which Azuki system was most likely compromised, process activity frequency was analyzed across Azuki devices.
+RATIONALE 
+The incident brief specifies that four Azuki systems are in scope and provides a starting point to identify relevant devices. The first step was to enumerate all devices associated with the Azuki environment.
+
 Picture1.png
 
-DeviceProcessEvents
-| where DeviceName contains "azuki"
-| summarize Events=count() by DeviceName
-| order by Events desc
 
 - **Answer:** `BitSentinelCore.exe`
