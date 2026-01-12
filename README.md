@@ -7,7 +7,7 @@ One week after the initial compromise, ransom notes are discovered across every 
 **Scope:** Linux Backup Server + Windows Endpoints
 
 The CEO needs answers:
-•	How did they get to our backup infrastructure?
-•	What exactly did they destroy?
-•	How did the ransomware spread so fast?
-•	Can we recover?
+**•	How did they get to our backup infrastructure?
+**•	What exactly did they destroy?
+#•	How did the ransomware spread so fast?
+#•	Can we recover?
