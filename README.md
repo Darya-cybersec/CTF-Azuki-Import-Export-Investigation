@@ -1,31 +1,6 @@
 
 <img width="400" src="https://github.com/user-attachments/assets/44bac428-01bb-4fe9-9d85-96cba7698bee" alt="Tor Logo with the onion and a crosshair on it"/>
 
-_____ _ _            _   _                     
-  / ____(_) |          | | | |                    
- | (___  _| | ___ _ __ | |_| |    _   _ _ __ __  __
-  \___ \| | |/ _ \ '_ \| __| |   | | | | '_ \\ \/ /
-  ____) | | |  __/ | | | |_| |___| |_| | | | |>  < 
- |_____/|_|_|\___|_| |_|\__|______\__, |_| |_/_/\_\
-                                   __/ |          
-                                  |___/           
-
-════════════════════════════════════════════════════════════════════════════════
-              SECURITY ASSESSMENT REPORT | SILENTLYNX SECURITY TEAM
-════════════════════════════════════════════════════════════════════════════════
-
-┌─────────────────────────────────────────────────────────────────────────────┐
-│  CLIENT:          Azuki Logistics Ltd.                                      │
-│  ASSESSMENT ID:   SL-ASM-2025-1127-BC844                                    │
-│  VICTIM KEY:      AZUKI-BC844-1127                                          │
-│  AFFILIATE ID:    SL-AFF-2847                                               │
-│  ENCRYPTION ID:   7f3a9c2b-4e8d-1f6a-9b2c-3d7e8f4a1c5b                      │
-│  DATE:            November 27, 2025                                         │
-│  ASSESSMENT TIME: 7 Days                                                    │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-
-
 
 # SOC Incident Investigation – Azuki Import/Export 
 
