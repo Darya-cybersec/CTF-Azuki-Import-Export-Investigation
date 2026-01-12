@@ -38,7 +38,7 @@ The MDE LAW logs are your only source of truth. DeviceProcessEvents
 🚩 FLAG 1: LATERAL MOVEMENT - Remote Access
 Attackers pivot to critical infrastructure to eliminate recovery options before deploying ransomware.
 
-- **Discovery:** 
+**Discovery:** 
 Workstations are common initial access and pivot points in ransomware campaigns. To identify which Azuki system was most likely compromised, process activity frequency was analyzed across Azuki devices.
 RATIONALE 
 The incident brief specifies that four Azuki systems are in scope and provides a starting point to identify relevant devices. The first step was to enumerate all devices associated with the Azuki environment.
@@ -52,4 +52,4 @@ To reach Linux-based backup infrastructure from a Windows workstation, attackers
 
 ![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/01c0ad697d1cd5adcc7b95f8147d18fa5b60ea96/Picture2SSH.png)
 
-- **Answer:FLAG 1 🚩:** ssh.exe" backup-admin@10.1.0.189
+**Answer:FLAG 1 🚩: ssh.exe" backup-admin@10.1.0.189**
