@@ -34,7 +34,7 @@ The MDE LAW logs are your only source of truth. DeviceProcessEvents
 ## 🔎 Flag Analysis & Findings
 
 ### 🐧 PHASE 1: LINUX BACKUP SERVER COMPROMISE (FLAGS 1-12)
-🚩 FLAG 1: LATERAL MOVEMENT - Remote Access
+**🚩 FLAG 1:** LATERAL MOVEMENT - Remote Access
 Attackers pivot to critical infrastructure to eliminate recovery options before deploying ransomware.
 
 **Discovery:** 
@@ -52,3 +52,12 @@ To reach Linux-based backup infrastructure from a Windows workstation, attackers
 ![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/01c0ad697d1cd5adcc7b95f8147d18fa5b60ea96/Picture2SSH.png)
 
 **Answer:FLAG 1 🚩: ssh.exe" backup-admin@10.1.0.189**
+**MITRE:** T1021.004 – Remote Services (SSH)
+
+**🚩 FLAG 2:** LATERAL MOVEMENT - Attack Source
+
+**Discovery:** After identifying SSH-based lateral movement originating from the compromised workstation (azuki-adminpc), network telemetry was analyzed to determine the source IP address responsible for initiating the connection. The investigation pivoted to the DeviceNetworkEvents table to examine outbound SSH traffic. Network events were filtered to include only connections from azuki-adminpc using TCP port 22, consistent with SSH activity targeting the backup server (azuki-backupsrv). The LocalIP field was reviewed to identify the IP address that initiated the connection, which was captured as the attack source.
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/ea11306f91dc04627c43c2bd8698ec86c4000599/Picture3.png)
+
+**Answer:FLAG 2 🚩: 10.1.0.108**
