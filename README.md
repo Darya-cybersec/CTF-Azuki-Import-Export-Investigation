@@ -64,3 +64,14 @@ To reach Linux-based backup infrastructure from a Windows workstation, attackers
 **Answer:FLAG 2 🚩: 10.1.0.108**
 
 **MITRE ATT&CK Mapping:** T1078.002: Valid Accounts - Domain Accounts
+
+**🚩 FLAG 3:** CREDENTIAL ACCESS - Compromised Account
+Administrative accounts with backup privileges provide access to critical recovery infrastructure.
+
+**Discovery:** After identifying SSH-based lateral movement from the compromised workstation, process execution telemetry was reviewed to determine the account used to authenticate to the backup server. DeviceProcessEvents were filtered for SSH command execution originating from azuki-adminpc. The username specified in the SSH command line was extracted and identified as the account used to access the backup infrastructure.
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/047b1a28c1a9443a0ce5c1ec4f70a0157c506f31/Picture4.png)
+
+**Answer:FLAG 3 🚩: backup-admin**
+
+**MITRE ATT&CK Mapping:** T1078.002: Valid Accounts - Domain Accounts
