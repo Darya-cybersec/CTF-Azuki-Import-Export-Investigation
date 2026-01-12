@@ -95,6 +95,17 @@ Process execution telemetry on the backup server was analyzed for file search co
 
 ![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/43c61881a567294d6cd428b4181120bf7c3196b8/Picture6.png)
 
-**Answer:FLAG 5 🚩: find /backups -name *.tar.gz**
+🚩 **Answer:FLAG 5 :** find /backups -name *.tar.gzl
 
 **MITRE ATT&CK Mapping:** T1083: File and Directory Discovery
+
+**🚩 FLAG 6:** DISCOVERY - Account Enumeration
+
+Attackers enumerate local accounts to understand the system's user base.
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/a33de4318548662444a6e869e8b9c0e03365a06c/Picture7.png)
+
+**Discovery:** TAfter identifying file and directory discovery activity on the backup server, the investigation continued by examining whether the threat actor enumerated local user accounts. Understanding the local user base is a common reconnaissance step used to identify potential privilege escalation targets or accounts of interest.
+
+**MITRE ATT&CK Mapping:** T1087.001: Account Discovery - Local Account
+
