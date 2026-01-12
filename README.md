@@ -75,3 +75,14 @@ Administrative accounts with backup privileges provide access to critical recove
 **Answer:FLAG 3 🚩: backup-admin**
 
 **MITRE ATT&CK Mapping:** T1078.002: Valid Accounts - Domain Accounts
+
+**🚩 FLAG 4:** DISCOVERY - Directory Enumeration
+File system enumeration reveals backup locations and valuable targets for destruction.
+
+**Discovery:** The DeviceProcessEvents table was queried to isolate executions of the ls command on the backup server, as this is a standard Linux utility used to list directory contents. By reviewing the resulting command lines, the directory listing command targeting the primary backup path was identified. The full command line used to enumerate the backup directory contents was captured as evidence of discovery activity consistent with MITRE ATT&CK technique T1083 – File and Directory Discovery.
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/df1654e20182b5e9858f0cfd1f0997989ebdb3ad/Picture5.png)
+
+**Answer:FLAG 4 🚩: ls --color=auto -la /backups/**
+
+**MITRE ATT&CK Mapping:** T1083: File and Directory Discovery
