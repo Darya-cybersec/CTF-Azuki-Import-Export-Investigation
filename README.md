@@ -144,7 +144,17 @@ Backup servers often store sensitive configuration files containing credentials.
 
 **MITRE ATT&CK Mapping:** T1552.001: Unsecured Credentials - Credentials In Files
 
+**🚩 FLAG 10:** IMPACT - Data Destruction: 
+Destroying backups eliminates recovery options and maximises ransomware impact.
 
+**Discovery:** After completing discovery, credential access, and tool transfer activities on the backup server, the investigation shifted to identifying actions that directly impacted data recovery capabilities. Process execution telemetry on the backup server was reviewed for commands associated with file deletion, specifically those using recursive removal utilities.
+Multiple rm commands were observed; however, the following command was identified as the primary destructive action:
+
+🚩 **Answer:FLAG 10 :** rm -rf /backups/archives /backups/azuki-adminpc ... 
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/696ffc32ffde9414159b959253965b17baa5c301/Picture11.png)
+
+**MITRE ATT&CK Mapping:** T1485: Data Destruction
 
 
 
