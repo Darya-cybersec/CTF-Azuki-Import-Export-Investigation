@@ -61,3 +61,4 @@ To reach Linux-based backup infrastructure from a Windows workstation, attackers
 ![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/ea11306f91dc04627c43c2bd8698ec86c4000599/Picture3.png)
 
 **Answer:FLAG 2 🚩: 10.1.0.108**
+**MITRE:** T1078.002: Valid Accounts - Domain Accounts
