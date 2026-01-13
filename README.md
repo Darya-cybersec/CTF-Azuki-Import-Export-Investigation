@@ -177,6 +177,57 @@ Stopping services takes effect immediately but does NOT survive a reboot.
 
 **MITRE ATT&CK Mapping:** T1489 – Service Stop
 
+**💻 PHASE 2: WINDOWS RANSOMWARE DEPLOYMENT (FLAGS 13-15)**
+**🚩 FLAG 13:** LATERAL MOVEMENT - Remote Execution
+Remote administration tools enable attackers to deploy malware across multiple systems simultaneously.What tool executed commands on remote systems?
+
+**Answer 🚩:** PsExec64.exe
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/7dc3c38dcb4e60b279d39b43307a413650a278d1/Picture14.png)
+
+**MITRE ATT&CK Mapping:** T1021.002: SMB/Windows Admin Shares
+
+**🚩 FLAG 14:** LATERAL MOVEMENT - Deployment Command
+Full command lines reveal target systems, credentials, and deployed payloads. 
+
+**Discovery:** After identifying PsExec64.exe as the remote execution tool, process execution telemetry was reviewed to capture the full deployment command used for lateral movement. The command includes the remote target, credentials supplied, and the payload copied and executed on the destination system. This confirms how the attacker deployed malware across the environment using SMB administrative shares.
+
+**Answer 🚩:** PsExec64.exe \\10.1.0.102 -u kenji.sato -p ********** -c -f C:\Windows\Temp\cache\silentlynx.exe
+
+**MITRE ATT&CK Mapping:** T1021.002: SMB/Windows Admin Shares
+
+**🚩 FLAG 15:** EXECUTION - Malicious Payload
+Identifying the payload enables threat hunting across the environment.
+
+**Discovery:** After identifying the remote execution mechanism used for lateral movement, the investigation focused on the executable deployed across systems. Process execution logs showed that silentlynx.exe was copied to remote hosts and executed via PsExec, confirming it as the malicious payload used during ransomware deployment. 
+
+**Answer 🚩:** silentlynx.exe
+
+**MITRE ATT&CK Mapping:** T1204.002 – User Execution: Malicious File.
+
+**🔥 PHASE 3: RECOVERY INHIBITION (FLAGS 16-22)**
+**🚩 FLAG 16:** IMPACT - Shadow Service Stopped
+Ransomware stops backup services to prevent recovery during encryption.
+
+**Discovery:** Process execution telemetry identified a command that stopped the Volume Shadow Copy service, immediately preventing the creation of new shadow copies during ransomware execution. 
+
+**Answer 🚩:** net" stop VSS /y
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/888d12aad1d1684226140575155b4ce88d036bda/Picture16.png)
+
+**MITRE ATT&CK Mapping:** T1490: Inhibit System Recovery
+
+**🚩 FLAG 17:** IMPACT - Backup Engine Stopped
+Stopping backup engines prevents backup operations during the attack.
+
+**Discovery:** After identifying recovery-inhibition activity on the Azuki environment, the investigation shifted to determining whether Windows-native backup components were intentionally disabled. Process execution telemetry was reviewed for service control commands capable of stopping backup engines rather than scheduling or shadow copy services
+
+**Answer 🚩:** "net" stop wbengine /y
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/f7bac7973afcfc97b652428a2b8ec47793498bd6/Picture17.png)
+
+**MITRE ATT&CK Mapping:** T1490: Inhibit System Recovery
+
 
 
 
