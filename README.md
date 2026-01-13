@@ -156,5 +156,27 @@ Multiple rm commands were observed; however, the following command was identifie
 
 **MITRE ATT&CK Mapping:** T1485: Data Destruction
 
+**🚩 FLAG 11:** IMPACT - Service Stopped 
+Stopping services takes effect immediately but does NOT survive a reboot.
+
+**Discovery:** After identifying destructive activity against backup data, process execution logs were reviewed to determine whether the attacker disrupted system services to cause immediate operational impact. The following command was identified as it stops the cron service, preventing scheduled jobs such as automated backups from running. 
+
+🚩 **Answer:FLAG 11 :** systemctl stop cron
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/1a3af9b450e4258bf6620524535053bc59703b8f/Picture12.png)
+
+**MITRE ATT&CK Mapping:** T1489 – Service Stop.
+
+**🚩 FLAG 12:** IMPACT - Service Disabled
+
+**Discovery:** After identifying temporary service disruption, the investigation focused on actions that would persist across system reboots. Process execution telemetry on the backup server was reviewed for commands that permanently disable services.
+
+🚩 **Answer:FLAG 12 :** systemctl disable cron
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/6c728d2d7e942d0fb7884804850aec30954bcfe1/Picture13.png)
+
+**MITRE ATT&CK Mapping:** T1489 – Service Stop
+
+
 
 
