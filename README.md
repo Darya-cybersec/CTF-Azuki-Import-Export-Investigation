@@ -3,7 +3,15 @@
 ![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/eeebf6367dbb5567021d790a025d5300dd61ca9e/RANSOM%20NOTE.png
 )
 
-- [Scenario Creation](https://github.com/Darya-cybersec/threat-hunting-scenario-tor/blob/main/threat-hunting-scenario-tor-event-creation.md)
+**Executive Overview**
+This report documents a full ransomware intrusion lifecycle against Azuki Import/Export, from backup infrastructure compromise through ransomware deployment, recovery inhibition, persistence, and anti‑forensics. Each section corresponds to a validated CTF flag and includes:
+
+What happened (finding)
+Why it matters (impact)
+MITRE ATT&CK mapping
+Representative KQL used to identify the activity
+
+---
 
 ## Platforms and Languages Leveraged
 - Windows 10 Virtual Machines (Microsoft Azure)
@@ -161,7 +169,7 @@ Stopping services takes effect immediately but does NOT survive a reboot.
 
 **Discovery:** After identifying destructive activity against backup data, process execution logs were reviewed to determine whether the attacker disrupted system services to cause immediate operational impact. The following command was identified as it stops the cron service, preventing scheduled jobs such as automated backups from running. 
 
-**Answer 🚩:** systemctl stop cron
+**Answer 🚩: systemctl stop cron**
 
 ![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/1a3af9b450e4258bf6620524535053bc59703b8f/Picture12.png)
 
@@ -171,7 +179,7 @@ Stopping services takes effect immediately but does NOT survive a reboot.
 
 **Discovery:** After identifying temporary service disruption, the investigation focused on actions that would persist across system reboots. Process execution telemetry on the backup server was reviewed for commands that permanently disable services.
 
-**Answer 🚩:** systemctl disable cron
+**Answer 🚩: systemctl disable cron**
 
 ![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/6c728d2d7e942d0fb7884804850aec30954bcfe1/Picture13.png)
 
@@ -201,7 +209,7 @@ Identifying the payload enables threat hunting across the environment.
 
 **Discovery:** After identifying the remote execution mechanism used for lateral movement, the investigation focused on the executable deployed across systems. Process execution logs showed that silentlynx.exe was copied to remote hosts and executed via PsExec, confirming it as the malicious payload used during ransomware deployment. 
 
-**Answer 🚩:** silentlynx.exe
+**Answer 🚩: silentlynx.exe**
 
 **MITRE ATT&CK Mapping:** T1204.002 – User Execution: Malicious File.
 
@@ -211,7 +219,7 @@ Ransomware stops backup services to prevent recovery during encryption.
 
 **Discovery:** Process execution telemetry identified a command that stopped the Volume Shadow Copy service, immediately preventing the creation of new shadow copies during ransomware execution. 
 
-**Answer 🚩:** net" stop VSS /y
+**Answer 🚩: net" stop VSS /y**
 
 ![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/888d12aad1d1684226140575155b4ce88d036bda/Picture16.png)
 
@@ -222,7 +230,7 @@ Stopping backup engines prevents backup operations during the attack.
 
 **Discovery:** After identifying recovery-inhibition activity on the Azuki environment, the investigation shifted to determining whether Windows-native backup components were intentionally disabled. Process execution telemetry was reviewed for service control commands capable of stopping backup engines rather than scheduling or shadow copy services
 
-**Answer 🚩:** "net" stop wbengine /y
+**Answer 🚩: "net" stop wbengine /y**
 
 ![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/f7bac7973afcfc97b652428a2b8ec47793498bd6/Picture17.png)
 
@@ -234,7 +242,7 @@ Certain processes lock files and must be terminated before encryption can succee
 **Discovery:** During the investigation, multiple taskkill commands were observed targeting different applications and services. To determine which action was taken to unlock files for ransomware encryption, the analysis focused on processes known to maintain exclusive file locks on high-value data. The following command was selected because SQL Server actively locks database files while running, preventing other processes from modifying or encrypting them. Terminating sqlservr.exe immediately releases those locks, enabling ransomware to encrypt database files that would otherwise be inaccessible.
 Other terminated processes (such as office applications, antivirus components, or utilities) may lock individual files or provide defensive capabilities, but database engines represent the most critical and commonly targeted file-locking processes during ransomware operations. This makes the termination of sqlservr.exe the most direct and impactful action to facilitate widespread data encryption.
 
-**Answer 🚩:** "taskkill" /F /IM sqlservr.exe
+**Answer 🚩: "taskkill" /F /IM sqlservr.exe**
 
 ![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/7305d2f6afa655b45b82ab148303bc3984acbdad/Picture18.png)
 
@@ -258,7 +266,7 @@ Limiting storage prevents new recovery points from being created.
 **Discovery:** Following the deletion of existing recovery points, the investigation examined whether the attacker took additional steps to prevent the creation of new recovery points. Process execution telemetry revealed multiple vssadmin resize shadowstorage commands with different maximum storage allocations.
 The following command was identified as the relevant action because reducing shadow storage to 401 MB is insufficient to sustain Volume Shadow Copy creation on a system drive. This effectively prevents Windows from generating new recovery points, even if the Volume Shadow Copy Service remains available. In contrast, a 5GB allocation would still allow shadow copies to be created and does not align with the attacker’s objective of fully inhibiting recovery.
 
-**Answer 🚩:** "vssadmin.exe" resize shadowstorage /for=C: /on=C: /maxsize=401MB
+**Answer 🚩: "vssadmin.exe" resize shadowstorage /for=C: /on=C: /maxsize=401MB**
 
 ![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/77d7f2a6a879b6c39622e107938d5909e253956f/Picture20.png)
 
@@ -269,12 +277,70 @@ Windows recovery features enable automatic system repair after corruption.
 
 **Discovery:** After confirming that recovery points were deleted and shadow storage was restricted, the investigation evaluated whether Windows automatic recovery features were explicitly disabled. Process execution telemetry was reviewed for boot configuration changes that affect system recovery behavior.The following command disables the Windows Recovery Environment (WinRE), preventing the system from entering automatic repair or recovery mode following system corruption or encryption. Disabling recovery at the boot configuration level ensures that recovery options remain unavailable even after a reboot, further limiting remediation capabilities.
 
-**Answer 🚩:** "bcdedit" /set {default} recoveryenabled No
+**Answer 🚩: "bcdedit" /set {default} recoveryenabled No**
 
 ![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/c605158b4968c7e0c75b564d8650530457cb424c/Picture21.png)
 
 **MITRE ATT&CK Mapping:** T1490: Inhibit System Recovery
 
+**🚩 FLAG 22:** IMPACT - Catalog Deletion
+Backup catalogues track available restore points and backup versions.
+
+**Discovery:** After identifying actions that disabled backup services, removed recovery points, and prevented new recovery data from being created, the investigation assessed whether backup metadata itself was intentionally destroyed. Backup catalogs are required for Windows to identify and restore existing backups; deleting them prevents recovery even if backup files still exist. To investigate this, process execution telemetry was reviewed for Windows backup administration utilities capable of modifying or deleting backup metadata. This following command deletes the Windows Backup catalog, removing the system’s ability to enumerate or restore existing backups. Deleting the catalog represents a final recovery-inhibition step, as it eliminates restore visibility rather than merely stopping services or deleting data.
+
+**Answer 🚩: "wbadmin" delete catalog -quiet**
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/a9694e0d304af1350800b6115bbe56cad9c2b3ce/Picture22.png)
+
+**MITRE ATT&CK Mapping:** T1490: Inhibit System Recovery
+
+**🔒 PHASE 4: PERSISTENCE (FLAGS 23-24)**
+**🚩 FLAG 23:** PERSISTENCE - Registry Autorun
+Registry keys can execute programs automatically at system startup.
+
+**Discovery:** Following identification of ransomware execution and recovery inhibition, the investigation assessed whether persistence mechanisms were established to ensure the malware would execute after a system reboot. Registry activity was reviewed for modifications to Windows autorun locations under CurrentVersion\Run, which are commonly abused for startup persistence. Following identification of ransomware execution and recovery inhibition, the investigation assessed whether persistence mechanisms were established to ensure the malware would execute after a system reboot. Registry activity was reviewed for modifications to Windows autorun locations under CurrentVersion\Run, which are commonly abused for startup persistence.Registry telemetry revealed the creation of the following autorun value:
+
+**Answer 🚩: RegistryValueName: WindowsSecurityHealth**
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/7264e05d9b9af4c4be18a1e8392f5f03cdb1818f/Picture23.png)
+
+**MITRE ATT&CK Mapping:** Registry Run Keys / Startup Folder
+
+**🚩 FLAG 24:** PERSISTENCE - Scheduled Execution
+Scheduled jobs provide reliable persistence with configurable triggers.
+
+**Discovery:** Scheduled task persistence was identified by querying the DeviceProcessEvents table for executions of schtasks using the /createparameter. Command-line arguments were reviewed to extract task names, with attention given to tasks that mimicked legitimate Windows paths. The task Microsoft\Windows\Security\SecurityHealthService was observed executing a suspicious binary at user logon, indicating persistence. 
+
+**Answer 🚩: \Microsoft\Windows\Security\SecurityHealthService**
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/f41976abf5d955ede745d28b3b375cc3e2c1c61e/Picture24.png)
+
+**MITRE ATT&CK Mapping:** T1053.005: Scheduled Task/Job
+
+**🧹 PHASE 5: ANTI-FORENSICS (FLAG 25)**
+**🚩 FLAG 25:** DEFENSE EVASION - Journal Deletion
+File system journals track changes and are valuable for forensic analysis.
+
+**Discovery:** During the anti-forensics phase of the investigation, analysis focused on identifying actions intended to erase forensic artifacts from disk. Based on the attack stage and provided indicators, NTFS USN journal manipulation was suspected, as the journal is a key source for reconstructing file activity timelines.
+Process execution telemetry was queried for fsutil.exe, the Windows utility responsible for filesystem and USN journal operations. This allowed differentiation between benign file creation activity and destructive filesystem commands. The follwoing command explicitly deletes the NTFS USN change journal on the system drive, permanently removing records of file creation, modification, and deletion. Unlike other fsutil usage observed, this action has no legitimate operational purpose in this context and directly targets forensic evidence.
+
+**Answer 🚩: fsutil.exe usn deletejournal /D C:**
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/c606d14ca96a42a336ddd96b4940ef71143038d7/Picture25.png)
+
+**MITRE ATT&CK Mapping:** T1070.004: Indicator Removal on Host - File Deletion
+
+**💀 PHASE 6: RANSOMWARE SUCCESS (FLAG 26)**
+**🚩 FLAG 26:** IMPACT - Ransom Note
+Ransom notes communicate payment instructions and indicate successful encryption.
+
+**Discovery:** To identify the ransom note filename, I pivoted from the confirmed ransomware payload (silentlynx.exe) and queried file activity events within the incident window. I filtered DeviceFileEvents for .txt files with creation/rename/modify actions where the initiating process was silentlynx.exe. This isolates artifacts produced directly by the ransomware activity. 
+
+**Answer 🚩: SILENTLYNX_README.txt**
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/ac27f9562a0d5212bbadf41ee80dac0bbcce7ebd/Picture26.png)
+
+**MITRE ATT&CK Mapping:** T1486 (Data Encrypted for Impact).
 
 
 
