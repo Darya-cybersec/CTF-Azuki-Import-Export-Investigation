@@ -228,6 +228,54 @@ Stopping backup engines prevents backup operations during the attack.
 
 **MITRE ATT&CK Mapping:** T1490: Inhibit System Recovery
 
+**🚩 FLAG 18:** DEFENSE EVASION - Process Termination
+Certain processes lock files and must be terminated before encryption can succeed.
+
+**Discovery:** During the investigation, multiple taskkill commands were observed targeting different applications and services. To determine which action was taken to unlock files for ransomware encryption, the analysis focused on processes known to maintain exclusive file locks on high-value data. The following command was selected because SQL Server actively locks database files while running, preventing other processes from modifying or encrypting them. Terminating sqlservr.exe immediately releases those locks, enabling ransomware to encrypt database files that would otherwise be inaccessible.
+Other terminated processes (such as office applications, antivirus components, or utilities) may lock individual files or provide defensive capabilities, but database engines represent the most critical and commonly targeted file-locking processes during ransomware operations. This makes the termination of sqlservr.exe the most direct and impactful action to facilitate widespread data encryption.
+
+**Answer 🚩:** "taskkill" /F /IM sqlservr.exe
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/7305d2f6afa655b45b82ab148303bc3984acbdad/Picture18.png)
+
+**MITRE ATT&CK Mapping:** T1562.001: Impair Defenses - Disable or Modify Tools
+
+**🚩 FLAG 19:** IMPACT - Recovery Point Deletion
+Recovery points enable rapid file recovery without external backups.
+
+**Discovery:** After identifying multiple actions aimed at disabling backup services and engines, the investigation shifted to determining whether existing recovery points were actively removed. On Windows systems, recovery points are managed through Volume Shadow Copies, which are commonly targeted by ransomware to prevent file restoration.
+Because shadow copies are administered using the built-in vssadmin.exe utility, process execution telemetry was filtered specifically for executions of this binary across Azuki systems. Reviewing the full command lines associated with vssadmin.exe revealed a command that explicitly deleted all shadow copies. 
+
+**Answer 🚩:** vssadmin.exe delete shadows /all /quiet
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/261aa7585b8bb0b5af71071492cbb16b3b21dcbf/Picture19.png)
+
+**MITRE ATT&CK Mapping:** T1490: Inhibit System Recovery
+
+**🚩 FLAG 20:** IMPACT - Storage Limitation
+Limiting storage prevents new recovery points from being created.
+
+**Discovery:** Following the deletion of existing recovery points, the investigation examined whether the attacker took additional steps to prevent the creation of new recovery points. Process execution telemetry revealed multiple vssadmin resize shadowstorage commands with different maximum storage allocations.
+The following command was identified as the relevant action because reducing shadow storage to 401 MB is insufficient to sustain Volume Shadow Copy creation on a system drive. This effectively prevents Windows from generating new recovery points, even if the Volume Shadow Copy Service remains available. In contrast, a 5GB allocation would still allow shadow copies to be created and does not align with the attacker’s objective of fully inhibiting recovery.
+
+**Answer 🚩:** "vssadmin.exe" resize shadowstorage /for=C: /on=C: /maxsize=401MB
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/77d7f2a6a879b6c39622e107938d5909e253956f/Picture20.png)
+
+**MITRE ATT&CK Mapping:** T1490: Inhibit System Recovery
+
+**🚩 FLAG 21:** IMPACT - Recovery Disabled
+Windows recovery features enable automatic system repair after corruption.
+
+**Discovery:** After confirming that recovery points were deleted and shadow storage was restricted, the investigation evaluated whether Windows automatic recovery features were explicitly disabled. Process execution telemetry was reviewed for boot configuration changes that affect system recovery behavior.The following command disables the Windows Recovery Environment (WinRE), preventing the system from entering automatic repair or recovery mode following system corruption or encryption. Disabling recovery at the boot configuration level ensures that recovery options remain unavailable even after a reboot, further limiting remediation capabilities.
+
+**Answer 🚩:** "bcdedit" /set {default} recoveryenabled No
+
+![Image Alt](https://github.com/Darya-cybersec/CTF-Azuki-Import-Export-Investigation/blob/c605158b4968c7e0c75b564d8650530457cb424c/Picture21.png)
+
+**MITRE ATT&CK Mapping:** T1490: Inhibit System Recovery
+
+
 
 
 
