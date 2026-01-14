@@ -9,10 +9,10 @@
 
 This report documents a full ransomware intrusion lifecycle against Azuki Import/Export, from backup infrastructure compromise through ransomware deployment, recovery inhibition, persistence, and anti‑forensics. Each section corresponds to a validated CTF flag and includes:
 
-What happened (finding)
-Why it matters (impact)
-MITRE ATT&CK mapping
-Representative KQL used to identify the activity
+- What happened (finding)
+- Why it matters (impact)
+- MITRE ATT&CK mapping
+- Representative KQL used to identify the activity
 
 ---
 
